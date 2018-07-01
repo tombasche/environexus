@@ -8,7 +8,7 @@ from homeassistant.const import CONF_HOST
 import homeassistant.helpers.config_validation as cv
 
 # Home Assistant depends on 3rd party packages for API specific code.
-REQUIREMENTS = ['environexus==0.1']
+REQUIREMENTS = ['environexus==1.0']
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -20,7 +20,10 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Setup the Awesome Light platform."""
-    import environexus
+    try:
+        import environexus
+    except ImportError as ex:
+        logging.exception('Failed to import lib: {}'.format(ex))
 
     # Assign configuration variables. The configuration check takes care they are
     # present.
