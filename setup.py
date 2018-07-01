@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="environexus",
-    version="1.0",
+    version="1.1",
     author="Thomas Basche",
     author_email="tcbasche@gmail.com",
     description="A library for Home Assistant to manage Zwave devices on the Environexus controller",

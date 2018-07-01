@@ -3,3 +3,4 @@ Library for connecting an managing Environexus lights on a Zwave device in Home 
 """
 
 name = "environexus"
+from nexus_setup import *
