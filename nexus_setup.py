@@ -4,6 +4,7 @@ Initial setup for the lights on a particular device
 import requests
 
 LIGHT_TYPE = 'urn:schemas-upnp-org:device:BinaryLight:1'
+DISCOVERY_URL = 'http://{}/data_request?id=user_data'
 ACTION_URL = 'http://{url}/data_request?id=action&output_format=json&DeviceNum={device_num}' \
              '&serviceId=urn:upnp-org:serviceId:SwitchPower1&action=SetTarget&newTargetValue={target_value}'
 STATUS_URL = 'http://{url}/data_request?id=status&output_format=json&DeviceNum={device_num}'
@@ -32,7 +33,7 @@ class LightHub(object):
     Establish a collection of turn-on-able lights on the network
     """
     def __init__(self, url):
-        self.lights = find_lights(url)
+        self.lights = find_lights(DISCOVERY_URL.format(url))
 
 
 class NexusLight(object):
@@ -86,7 +87,3 @@ def check_is_on(json, id):
             if float(state['value']) > 0.0:
                 return True
             return False
-
-
-
-hub = LightHub('http://192.168.1.2:3480/data_request?id=user_data')
