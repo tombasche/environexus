@@ -23,7 +23,7 @@ def find_lights(url):
 
     for device in response['devices']:
         if device['device_type'] == LIGHT_TYPE:
-            new_light = NexusLight(device['id'], name=device['name'], base_url=url)
+            new_light = NexusLight(device['id'], name=device['name'], base_url=url, url=url)
             lights.append(new_light)
 
     return lights
@@ -41,9 +41,10 @@ class NexusLight(object):
     """
     Represents a nexus nero light
     """
-    def __init__(self, device_num, name, base_url):
+    def __init__(self, device_num, name, base_url, url):
         self.status_url = STATUS_URL.format(url=base_url, device_num=device_num)
-        self.action_url = ACTION_URL.format(url=base_url, device_num=device_num, target_value=0)
+        self.base_url = base_url
+        self.url = url
         self.device_num = device_num
         self.name = name
 
@@ -56,7 +57,7 @@ class NexusLight(object):
 
     def turn_on(self):
         """ Turn on a light"""
-        resp = requests.post(self.action_url.format(target_value=1))
+        resp = requests.post(ACTION_URL.format(url=self.url, device_num=self.device_num, target_value=1))
         resp.raise_for_status()
 
         light_response = resp.json()
@@ -66,7 +67,7 @@ class NexusLight(object):
 
     def turn_off(self):
         """ Turn off a light"""
-        resp = requests.post(self.action_url.format(target_value=0))
+        resp = requests.post(ACTION_URL.format(url=self.url, device_num=self.device_num, target_value=0))
         resp.raise_for_status()
 
         light_response = resp.json()
