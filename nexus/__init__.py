@@ -84,7 +84,7 @@ def check_is_on(json, id):
     :param id:
     :return:
     """
-    for state in json[f'Device_Num_{id}']['states']:
+    for state in json['Device_Num_{}'.format(id)]['states']:
         if state['service'] == 'urn:micasaverde-com:serviceId:EnergyMetering1' and state['variable'] == "Watts":
             if float(state['value']) > 0.0:
                 return True
