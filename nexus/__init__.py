@@ -89,6 +89,3 @@ def check_is_on(json, id):
             if float(state['value']) > 0.0:
                 return True
             return False
-
-
-# hub = LightHub('192.168.1.2:3480')
