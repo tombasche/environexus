@@ -17,13 +17,14 @@ def find_lights(url):
     :return:
     """
     lights = []
-    resp = requests.get(url)
+    resp = requests.get(DISCOVERY_URL.format(url))
     resp.raise_for_status()
     response = resp.json()
 
     for device in response['devices']:
         if device['device_type'] == LIGHT_TYPE:
-            lights.append(device)
+            new_light = NexusLight(device['id'], name=device['name'], base_url=url)
+            lights.append(new_light)
 
     return lights
 
@@ -33,7 +34,7 @@ class LightHub(object):
     Establish a collection of turn-on-able lights on the network
     """
     def __init__(self, url):
-        self.lights = find_lights(DISCOVERY_URL.format(url))
+        self.lights = find_lights(url)
 
 
 class NexusLight(object):
@@ -42,10 +43,11 @@ class NexusLight(object):
     """
     def __init__(self, device_num, name, base_url):
         self.status_url = STATUS_URL.format(url=base_url, device_num=device_num)
-        self.action_url = ACTION_URL.format(url=base_url, device_num=device_num)
+        self.action_url = ACTION_URL.format(url=base_url, device_num=device_num, target_value=0)
         self.device_num = device_num
         self.name = name
 
+    @property
     def current_status(self):
         """ Get the current status of the light"""
         resp = requests.get(self.status_url)
@@ -87,3 +89,6 @@ def check_is_on(json, id):
             if float(state['value']) > 0.0:
                 return True
             return False
+
+
+# hub = LightHub('192.168.1.2:3480')
